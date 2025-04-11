@@ -8,6 +8,6 @@ package trabalhoFinal;
  *
  * @author Premiersoft
  */
-public class ValidadorHtml {
+public class PilhaVaziaException extends RuntimeException {
     
 }
