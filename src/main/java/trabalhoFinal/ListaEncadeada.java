@@ -11,6 +11,10 @@ package trabalhoFinal;
 public class ListaEncadeada<T> {
     private NoLista<T> primeiro;
     private int qteNos;
+
+    public int getQteNos() {
+        return qteNos;
+    }
     
     public ListaEncadeada(){
        this.primeiro = null;
@@ -20,7 +24,7 @@ public class ListaEncadeada<T> {
         return primeiro;
     }
   
-    public void inserir(T info){;
+    public void inserir(T info){
        NoLista<T> novo = new NoLista();
        novo.setInfo(info);
        novo.setProximo(primeiro);
@@ -33,51 +37,50 @@ public class ListaEncadeada<T> {
     }
 
     public T buscar(T info){
-       NoLista<T> p = new NoLista<T>();
-       
-       while(p != null){
-         if(p.getInfo().equals(info)){
-            return (T) p;
-         }
-         p.getProximo();
-       }
-      return null;
+        NoLista<T> p = primeiro;
+
+        while(p != null){
+            if(p.getInfo().equals(info)){
+                return p.getInfo(); // Retorna o conteúdo, não o nó
+            }
+            p = p.getProximo(); // ✅ Aqui estava o problema
+        }
+        return null;
     }
 
     public void retirar(T info){
-      NoLista<T> anterior = new NoLista<T>();
-      NoLista<T> p = new NoLista<T>();
-      
-      while(p != null && (p.getInfo() != info)){
-          anterior = p;
-          p.getProximo();
-      }
-      
-      if(p != null){
-        if(p == primeiro){
-          this.primeiro = p;
+        NoLista<T> anterior = null;
+        NoLista<T> p = primeiro;
+
+        while(p != null && !p.getInfo().equals(info)){
+            anterior = p;
+            p = p.getProximo(); // ✅ Aqui também estava errado
         }
-        anterior.setProximo(p.getProximo());
-        qteNos --;
-      }
+
+        if(p != null){
+            if(p == primeiro){
+                primeiro = p.getProximo(); // Corrige o início da lista
+            } else {
+                anterior.setProximo(p.getProximo());
+            }
+            qteNos--;
+        }
     }
 
+
     public int obterComprimento(){
-        NoLista<T> p = new NoLista<T>();
         int comprimento = 0;
-        p = primeiro;
-      
-      while(p != null){
-        comprimento ++;
-        p.getProximo();
-      }
-      
-      return comprimento;
+        NoLista<T> p = primeiro;
+
+        while(p != null){
+            comprimento++;
+            p = p.getProximo(); // ✅ Aqui também estava com problema
+        }
+
+        return comprimento;
     }
 
     public NoLista<T> obterNo(int idx){
-        int comprimento = obterComprimento();
-        
         if(idx < 0){
           throw new IndexOutOfBoundsException();
         }        

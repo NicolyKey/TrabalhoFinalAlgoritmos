@@ -7,11 +7,15 @@ package trabalhoFinal;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import trabalhoFinal.ErroValidacao;
+import trabalhoFinal.ValidadorHTML;
 
 /**
  *
@@ -27,6 +31,26 @@ public class GUI extends javax.swing.JFrame {
     public GUI() {
         initComponents();
     }
+    
+private void atualizarTabelaTags(File htmlFile) {
+    try {
+        ValidadorHTML validador = new ValidadorHTML();
+        ListaEncadeada<TagContador> lista = validador.contarTags(htmlFile);
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaTags.getModel();
+        modelo.setRowCount(0);
+
+        NoLista<TagContador> p = lista.getPrimeiro();
+        while (p != null) {
+            TagContador contador = p.getInfo();
+            modelo.addRow(new Object[]{contador.getTag(), contador.getQuantidade()});
+            p = p.getProximo();
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao contar tags: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -135,43 +159,37 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void analisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisarActionPerformed
-                    JFileChooser fileChooser = new JFileChooser();
+            JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo HTML (.html)", "html");
+        fileChooser.setFileFilter(filter);
 
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo html (.html)", "html");
-                    fileChooser.setFileFilter(filter);
+        int result = fileChooser.showOpenDialog(GUI.this);
+        if (result != JFileChooser.APPROVE_OPTION) return;
 
-                    int result = fileChooser.showOpenDialog(GUI.this);
+        File selectedFile = fileChooser.getSelectedFile();
+        if (!selectedFile.getName().toLowerCase().endsWith(".html")) {
+            JOptionPane.showMessageDialog(this, "Selecione um arquivo .html válido", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-                    if (result == JFileChooser.APPROVE_OPTION) {
-                        
-                    
-                        File selectedFile = fileChooser.getSelectedFile();
+        try {
+            ValidadorHTML validador = new ValidadorHTML();
+            ErroValidacao erro = validador.validarHTML(selectedFile);
 
-                        if (!selectedFile.getName().toLowerCase().endsWith(".html")) {
-                            JOptionPane.showMessageDialog(GUI.this,
-                                    "Por favor, selecione um arquivo html (.html).", "Formato Inválido",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return; // Sai da ação do botão e não executa o código abaixo
-                        }
+            if (erro != null) {
+                printRetorno.setText(erro.toString()); // Exibe o erro no JTextArea
+            } else {
+                printRetorno.setText("HTML válido! ✔️");
+            }
 
-                        try {
-                            FileReader reader = new FileReader(selectedFile);
-                            BufferedReader bufferedReader = new BufferedReader(reader);
-                            StringBuilder stringBuilder = new StringBuilder();
-                            String line;
-                            
-                            while ((line = bufferedReader.readLine()) != null) {
-                                stringBuilder.append(line).append("\n");
-                            }
-                            bufferedReader.close();
-                             
-                            textArea.setText("teste"+ selectedFile.getAbsolutePath());
-                            arquivoAtual = selectedFile;
-                        }catch(Exception e){
-                            //TODO: tratar erro
-                        }
-                    }
+           ListaEncadeada<TagContador> tags = validador.contarTags(selectedFile);
+atualizarTabelaTags(tags); // Chama a função para atualizar a tabela com as tags e suas ocorrências
 
+        } catch (Exception ex) {
+            printRetorno.setText("Erro ao ler arquivo: " + ex.getMessage());
+        }
+
+          
     }//GEN-LAST:event_analisarActionPerformed
 
     private void textAreaInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_textAreaInputMethodTextChanged
