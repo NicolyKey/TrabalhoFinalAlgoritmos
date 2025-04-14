@@ -17,30 +17,23 @@ import java.util.regex.Pattern;
  */
 public class ValidadorHTML {
   private static final Pattern TAG_PATTERN = Pattern.compile("<\\s*(/?)\\s*([a-zA-Z][a-zA-Z0-9]*)\\b([^>]*)/?>");
-private static final String[] SELF_CLOSING_TAGS = {
-    "img", "br", "hr", "input", "meta", "link"
-};
+  private static final String[] TAGS_AUTO_FECHAMENTO = {"img", "br", "hr", "input", "meta", "link"};
 
 public ErroValidacao validarHTML(File htmlFile) throws IOException {
     PilhaLista<String> pilha = new PilhaLista<>();
 
     try (BufferedReader reader = new BufferedReader(new FileReader(htmlFile))) {
-        String line;
+        String linha;
         int numLinha = 1;
 
-        while ((line = reader.readLine()) != null) {
+        while ((linha = reader.readLine()) != null) {
             
-            Matcher matcher = TAG_PATTERN.matcher(line);
-            System.out.println("Lendo linha " + numLinha + ": " + line);
-
+            Matcher matcher = TAG_PATTERN.matcher(linha);
 
             while (matcher.find()) {
                 boolean ehFechamento = matcher.group(1).equals("/");
                 String tagNome = matcher.group(2).toLowerCase();
 
-                System.out.println("Linha " + numLinha + ": Encontrada tag -> " + matcher.group(0));
-
-                // Nova verificação
                 boolean ehAutoFechamentoSintatico = matcher.group(0).endsWith("/>");
 
                 if (ehTagAutoFechamento(tagNome) || ehAutoFechamentoSintatico) {
@@ -69,14 +62,16 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
             return new ErroValidacao(numLinha, pilha.pop(),
                 "Tag de abertura não foi fechada");
         }
+    }catch (IOException  err){
+        System.out.println("Erro ao tentar ler arquivo");
     }
 
     return null;
     }
 
     private boolean ehTagAutoFechamento(String tagNome) {
-        for (String tag : SELF_CLOSING_TAGS) {
-            if (tag.equalsIgnoreCase(tagNome)) {
+        for (String tag : TAGS_AUTO_FECHAMENTO) {
+            if (tag.equals(tagNome)) {
                 return true;
             }
         }
@@ -95,7 +90,7 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
             while (matcher.find()) {
                 String tagNome = matcher.group(2).toLowerCase();
 
-                if (!matcher.group(1).equals("/")) { // ignorar fechamentos
+                if (!matcher.group(1).equals("/")) {
 
                     boolean encontrada = false;
                     NoLista<TagContador> p = listaContagem.getPrimeiro();

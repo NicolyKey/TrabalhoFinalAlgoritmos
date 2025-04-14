@@ -36,14 +36,14 @@ public class ListaEncadeada<T> {
         return primeiro == null;
     }
 
-    public T buscar(T info){
+    public NoLista<T> buscar(T info){
         NoLista<T> p = primeiro;
 
         while(p != null){
             if(p.getInfo().equals(info)){
-                return p.getInfo(); // Retorna o conteúdo, não o nó
+                return p;
             }
-            p = p.getProximo(); // ✅ Aqui estava o problema
+            p = p.getProximo();
         }
         return null;
     }
@@ -54,12 +54,12 @@ public class ListaEncadeada<T> {
 
         while(p != null && !p.getInfo().equals(info)){
             anterior = p;
-            p = p.getProximo(); // ✅ Aqui também estava errado
+            p = p.getProximo();
         }
 
         if(p != null){
             if(p == primeiro){
-                primeiro = p.getProximo(); // Corrige o início da lista
+                primeiro = p.getProximo();
             } else {
                 anterior.setProximo(p.getProximo());
             }
@@ -74,7 +74,7 @@ public class ListaEncadeada<T> {
 
         while(p != null){
             comprimento++;
-            p = p.getProximo(); // ✅ Aqui também estava com problema
+            p = p.getProximo();
         }
 
         return comprimento;

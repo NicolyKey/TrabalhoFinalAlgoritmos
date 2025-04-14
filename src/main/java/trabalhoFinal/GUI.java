@@ -31,26 +31,32 @@ public class GUI extends javax.swing.JFrame {
     public GUI() {
         initComponents();
     }
-    
-private void atualizarTabelaTags(File htmlFile) {
-    try {
-        ValidadorHTML validador = new ValidadorHTML();
-        ListaEncadeada<TagContador> lista = validador.contarTags(htmlFile);
 
-        DefaultTableModel modelo = (DefaultTableModel) tabelaTags.getModel();
-        modelo.setRowCount(0);
+    private void atualizarTabelaTags(File htmlFile) {
+        try {
+            ValidadorHTML validador = new ValidadorHTML();
+            ListaEncadeada<TagContador> lista = validador.contarTags(htmlFile);
 
-        NoLista<TagContador> p = lista.getPrimeiro();
-        while (p != null) {
-            TagContador contador = p.getInfo();
-            modelo.addRow(new Object[]{contador.getTag(), contador.getQuantidade()});
-            p = p.getProximo();
+            DefaultTableModel modelo = (DefaultTableModel) tabelaTags.getModel();
+            modelo.setRowCount(0);
+
+            NoLista<TagContador> noAtual = lista.getPrimeiro();
+            while (noAtual != null) {
+                TagContador contador = noAtual.getInfo();
+                modelo.addRow(new Object[]{
+                        contador.getTag(),
+                        Integer.valueOf(contador.getQuantidade())
+                });
+                noAtual = noAtual.getProximo();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erro ao contar tags: " + e.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE);
         }
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao contar tags: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -177,13 +183,13 @@ private void atualizarTabelaTags(File htmlFile) {
             ErroValidacao erro = validador.validarHTML(selectedFile);
 
             if (erro != null) {
-                printRetorno.setText(erro.toString()); // Exibe o erro no JTextArea
+                printRetorno.setText(erro.toString());
             } else {
-                printRetorno.setText("HTML válido! ✔️");
+                printRetorno.setText("O arquivo esta bem formatado.");
             }
 
            ListaEncadeada<TagContador> tags = validador.contarTags(selectedFile);
-atualizarTabelaTags(tags); // Chama a função para atualizar a tabela com as tags e suas ocorrências
+            atualizarTabelaTags(selectedFile);
 
         } catch (Exception ex) {
             printRetorno.setText("Erro ao ler arquivo: " + ex.getMessage());
