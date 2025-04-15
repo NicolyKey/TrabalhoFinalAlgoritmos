@@ -19,6 +19,11 @@ public class ErroValidacao extends Error {
         this.mensagem = mensagem;
     }
 
+    public ErroValidacao(int linha, String mensagem){
+        this.linha = linha;
+        this.mensagem = mensagem;
+    }
+
     public int getLinha() { return linha; }
     public String getTag() { return tag; }
     public String getMensagem() { return mensagem; }

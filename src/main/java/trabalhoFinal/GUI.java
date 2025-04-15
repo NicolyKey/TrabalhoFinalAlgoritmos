@@ -165,7 +165,7 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void analisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisarActionPerformed
-            JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo HTML (.html)", "html");
         fileChooser.setFileFilter(filter);
 
@@ -187,7 +187,7 @@ public class GUI extends javax.swing.JFrame {
             } else {
                 printRetorno.setText("O arquivo esta bem formatado.");
             }
-
+            textArea.setText(selectedFile.getAbsolutePath());
            ListaEncadeada<TagContador> tags = validador.contarTags(selectedFile);
             atualizarTabelaTags(selectedFile);
 

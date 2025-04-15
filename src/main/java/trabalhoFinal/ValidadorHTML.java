@@ -26,15 +26,24 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
     try (BufferedReader reader = new BufferedReader(new FileReader(htmlFile))) {
         String linha;
         int numLinha = 1;
+        int tagEncontradas = 0;
 
         while ((linha = reader.readLine()) != null) {
             
             Matcher matcher = TAG_PATTERN.matcher(linha);
 
             while (matcher.find()) {
-                boolean ehFechamento = matcher.group(1).equals("/");
-                String tagNome = matcher.group(2).toLowerCase(); // TODO: case sansitive
+                tagEncontradas ++;
 
+                String tagOriginal = matcher.group(2);
+                String tagNome = tagOriginal.toLowerCase();
+
+                if (!tagOriginal.equals(tagNome) && !tagOriginal.equalsIgnoreCase("!DOCTYPE")) {
+                    return new ErroValidacao(numLinha, tagOriginal,
+                            "Tag com letras maiúsculas não é permitida.");
+                }
+
+                boolean ehFechamento = matcher.group(1).equals("/");
                 boolean ehAutoFechamentoSintatico = matcher.group(0).endsWith("/>");
 
                 if (ehTagAutoFechamento(tagNome) || ehAutoFechamentoSintatico) {
@@ -50,19 +59,25 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
                     String tagEsperada = pilha.pop();
                     if (!tagEsperada.equals(tagNome)) {
                         return new ErroValidacao(numLinha, tagNome,
-                            "Tag de fechamento incorreta. Esperado: </" + tagEsperada + ">");
+                            "Tag de fechamento incorreta. Esperado: </" + tagEsperada + "> encontrado:");
                     }
                 } else {
                     pilha.push(tagNome);
                 }
             }
             numLinha++;
+
+
+        }
+        if (tagEncontradas == 0) {
+            return new ErroValidacao(0, "Nenhuma tag foi encontrada.");
         }
 
         if (!pilha.estaVazia()) {
             return new ErroValidacao(numLinha, pilha.pop(),
                 "Tag de abertura não foi fechada");
         }
+
     }catch (IOException  err){
         System.out.println("Erro ao tentar ler arquivo");
     }
