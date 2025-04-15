@@ -17,7 +17,8 @@ import java.util.regex.Pattern;
  */
 public class ValidadorHTML {
   private static final Pattern TAG_PATTERN = Pattern.compile("<\\s*(/?)\\s*([a-zA-Z][a-zA-Z0-9]*)\\b([^>]*)/?>");
-  private static final String[] TAGS_AUTO_FECHAMENTO = {"img", "br", "hr", "input", "meta", "link"};
+  private static final String[] TAGS_AUTO_FECHAMENTO = {"img", "br", "hr", "input", "meta", "link","base",
+          "col", "command", "embed" , "param", "source" , "!DOCTYPE"};
 
 public ErroValidacao validarHTML(File htmlFile) throws IOException {
     PilhaLista<String> pilha = new PilhaLista<>();
@@ -32,7 +33,7 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
 
             while (matcher.find()) {
                 boolean ehFechamento = matcher.group(1).equals("/");
-                String tagNome = matcher.group(2).toLowerCase();
+                String tagNome = matcher.group(2).toLowerCase(); // TODO: case sansitive
 
                 boolean ehAutoFechamentoSintatico = matcher.group(0).endsWith("/>");
 
@@ -79,13 +80,13 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
     }
     
     public ListaEncadeada<TagContador> contarTags(File htmlFile) throws IOException {
-    ListaEncadeada<TagContador> listaContagem = new ListaEncadeada<>();
+    ListaEncadeada<TagContador> listaContagem = new ListaEncadeada<>(); // TODO: Fazer com que não precise ler o arq 2x p contar
 
     try (BufferedReader reader = new BufferedReader(new FileReader(htmlFile))) {
-        String line;
+        String linha;
 
-        while ((line = reader.readLine()) != null) {
-            Matcher matcher = TAG_PATTERN.matcher(line);
+        while ((linha = reader.readLine()) != null) {
+            Matcher matcher = TAG_PATTERN.matcher(linha);
 
             while (matcher.find()) {
                 String tagNome = matcher.group(2).toLowerCase();
@@ -99,7 +100,6 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
                         if (p.getInfo().getTag().equals(tagNome)) {
                             p.getInfo().incrementar();
                             encontrada = true;
-                            break;
                         }
                         p = p.getProximo();
                     }
@@ -110,6 +110,8 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
                 }
             }
         }
+    }catch(IOException erro){
+        System.out.println("Erro ao ler arquivo para contagem.");
     }
 
     return listaContagem;

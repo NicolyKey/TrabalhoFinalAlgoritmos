@@ -13,7 +13,7 @@ public class PilhaLista<T> implements Pilha<T> {
      private ListaEncadeada<T> lista = new ListaEncadeada<>();
     @Override
     public void push(T info) {
-     lista.inserir(info);
+        lista.inserir(info);
     }
 
     @Override
