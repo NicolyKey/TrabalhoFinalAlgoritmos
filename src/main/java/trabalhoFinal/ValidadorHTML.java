@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
  * @author Premiersoft
  */
 public class ValidadorHTML {
+  // TODO: Fazer com que as tags sejam printadas em ordem alfabética
   private static final Pattern TAG_PATTERN = Pattern.compile("<\\s*(/?)\\s*([a-zA-Z][a-zA-Z0-9]*)\\b([^>]*)/?>");
   private static final String[] TAGS_AUTO_FECHAMENTO = {"img", "br", "hr", "input", "meta", "link","base",
           "col", "command", "embed" , "param", "source" , "!DOCTYPE"};
