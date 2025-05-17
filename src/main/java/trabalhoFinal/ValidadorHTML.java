@@ -16,11 +16,12 @@ import java.util.regex.Pattern;
  * @author Premiersoft
  */
 public class ValidadorHTML {
-  private static final Pattern TAG_PATTERN = Pattern.compile("<\\s*(/?)\\s*([a-zA-Z][a-zA-Z0-9]*)\\b([^>]*)/?>");
-  private static final String[] TAGS_AUTO_FECHAMENTO = {"img", "br", "hr", "input", "meta", "link","base",
+  // TODO: Fazer com que as tags sejam printadas em ordem alfabética
+  private Pattern TAG_PATTERN = Pattern.compile("<\\s*(/?)\\s*([a-zA-Z][a-zA-Z0-9]*)\\b([^>]*)/?>");
+  private String[] TAGS_AUTO_FECHAMENTO = {"img", "br", "hr", "input", "meta", "link","base",
           "col", "command", "embed" , "param", "source" , "!DOCTYPE"};
 
-public ErroValidacao validarHTML(File htmlFile) throws IOException {
+    public ErroValidacao validarHTML(File htmlFile) throws IOException {
     PilhaLista<String> pilha = new PilhaLista<>();
 
     try (BufferedReader reader = new BufferedReader(new FileReader(htmlFile))) {
