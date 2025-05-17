@@ -1,6 +1,10 @@
 # TrabalhoFinalAlgoritmos
 Trabalho final de Algoritmos e estrutura de dados
 
+## Equipe
+Nicoly Keyssiane Lima Araujo
+Ana Carolina Hausmann
+
 ## Objetivo:
 ### Validar a estrutura de um arquivo HTML:
 

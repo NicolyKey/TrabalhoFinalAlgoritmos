@@ -10,12 +10,7 @@ package trabalhoFinal;
  */
 public class ListaEncadeada<T> {
     private NoLista<T> primeiro;
-    private int qteNos;
 
-    public int getQteNos() {
-        return qteNos;
-    }
-    
     public ListaEncadeada(){
        this.primeiro = null;
     }
@@ -25,11 +20,10 @@ public class ListaEncadeada<T> {
     }
   
     public void inserir(T info){
-       NoLista<T> novo = new NoLista();
+       NoLista<T> novo = new NoLista<>();
        novo.setInfo(info);
        novo.setProximo(primeiro);
        this.primeiro = novo;
-       qteNos ++;
     }
     
     public boolean estaVazia(){
@@ -63,7 +57,6 @@ public class ListaEncadeada<T> {
             } else {
                 anterior.setProximo(p.getProximo());
             }
-            qteNos--;
         }
     }
 
