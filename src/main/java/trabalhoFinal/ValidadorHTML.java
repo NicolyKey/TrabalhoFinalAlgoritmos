@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
  * @author Premiersoft
  */
 public class ValidadorHTML {
-  // TODO: Fazer com que as tags sejam printadas em ordem alfabética
   private Pattern TAG_PATTERN = Pattern.compile("<\\s*(/?)\\s*([a-zA-Z][a-zA-Z0-9]*)\\b([^>]*)/?>");
   private String[] TAGS_AUTO_FECHAMENTO = {"img", "br", "hr", "input", "meta", "link","base",
           "col", "command", "embed" , "param", "source" , "!DOCTYPE"};
@@ -30,7 +29,7 @@ public class ValidadorHTML {
         int tagEncontradas = 0;
 
         while ((linha = reader.readLine()) != null) {
-            
+
             Matcher matcher = TAG_PATTERN.matcher(linha);
 
             while (matcher.find()) {
@@ -39,10 +38,6 @@ public class ValidadorHTML {
                 String tagOriginal = matcher.group(2);
                 String tagNome = tagOriginal.toLowerCase();
 
-                if (!tagOriginal.equals(tagNome) && !tagOriginal.equalsIgnoreCase("!DOCTYPE")) {
-                    return new ErroValidacao(numLinha, tagOriginal,
-                            "Tag com letras maiúsculas não é permitida.");
-                }
 
                 boolean ehFechamento = matcher.group(1).equals("/");
                 boolean ehAutoFechamentoSintatico = matcher.group(0).endsWith("/>");
@@ -53,7 +48,7 @@ public class ValidadorHTML {
 
                 if (ehFechamento) {
                     if (pilha.estaVazia()) {
-                        return new ErroValidacao(numLinha, tagNome, 
+                        return new ErroValidacao(numLinha, tagNome,
                             "Tag de fechamento sem abertura correspondente");
                     }
 
@@ -96,7 +91,7 @@ public class ValidadorHTML {
     }
     
     public ListaEncadeada<TagContador> contarTags(File htmlFile) throws IOException {
-    ListaEncadeada<TagContador> listaContagem = new ListaEncadeada<>(); // TODO: Fazer com que não precise ler o arq 2x p contar
+    ListaEncadeada<TagContador> listaContagem = new ListaEncadeada<>();
 
     try (BufferedReader reader = new BufferedReader(new FileReader(htmlFile))) {
         String linha;
