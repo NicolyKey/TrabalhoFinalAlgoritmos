@@ -8,7 +8,7 @@ package trabalhoFinal;
  *
  * @author Premiersoft
  */
-public class TagContador {
+public class TagContador implements Comparable<TagContador> {
     private String tag;
     private int quantidade;
 
@@ -27,6 +27,11 @@ public class TagContador {
 
     public void incrementar() {
         this.quantidade++;
+    }
+
+    @Override
+    public int compareTo(TagContador outro) {
+        return this.tag.compareToIgnoreCase(outro.getTag());
     }
 }
 

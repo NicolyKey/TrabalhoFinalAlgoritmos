@@ -37,17 +37,26 @@ public class GUI extends javax.swing.JFrame {
             ValidadorHTML validador = new ValidadorHTML();
             ListaEncadeada<TagContador> lista = validador.contarTags(htmlFile);
 
+            int tamanho = lista.obterComprimento();
+            TagContador[] array = new TagContador[tamanho];
+
+            NoLista<TagContador> atual = lista.getPrimeiro();
+            int i = 0;
+
+            while (atual != null) {
+                array[i] = atual.getInfo();  
+                atual = atual.getProximo();
+                i++;
+            }
+
+            OrdenacaoQuickSort<TagContador> quickSort = new OrdenacaoQuickSort<>();
+            quickSort.setInfo(array);
+            quickSort.ordernar();
+
             DefaultTableModel modelo = (DefaultTableModel) tabelaTags.getModel();
             modelo.setRowCount(0);
-
-            NoLista<TagContador> noAtual = lista.getPrimeiro();
-            while (noAtual != null) {
-                TagContador contador = noAtual.getInfo();
-                modelo.addRow(new Object[]{
-                        contador.getTag(),
-                        contador.getQuantidade()
-                });
-                noAtual = noAtual.getProximo();
+            for (TagContador tc : quickSort.getInfo()) {
+                modelo.addRow(new Object[]{ tc.getTag(), tc.getQuantidade() });
             }
 
         } catch (Exception e) {
@@ -57,6 +66,7 @@ public class GUI extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -188,6 +198,7 @@ public class GUI extends javax.swing.JFrame {
                 printRetorno.setText("O arquivo esta bem formatado.");
             }
             textArea.setText(selectedFile.getAbsolutePath());
+           ListaEncadeada<TagContador> tags = validador.contarTags(selectedFile);
             atualizarTabelaTags(selectedFile);
 
         } catch (Exception ex) {
