@@ -10,7 +10,8 @@ package trabalhoFinal;
  */
 public class PilhaLista<T> implements Pilha<T> {
 
-     private ListaEncadeada<T> lista = new ListaEncadeada<>();
+    private ListaEncadeada<T> lista = new ListaEncadeada<>();
+
     @Override
     public void push(T info) {
         lista.inserir(info);
@@ -39,21 +40,17 @@ public class PilhaLista<T> implements Pilha<T> {
 
     @Override
     public void liberar() {
-     // lista = new ListaEncadeada();
-     
       while(!estaVazia()){
          try{
-         while(true){
-            pop(); 
-           }
+            pop();
          }catch(PilhaVaziaException e){
-         
+           return;
          }
       }
      
     }
     
     public String toString(){
-       return lista.toString();
+        return lista.toString();
     }
 }

@@ -45,7 +45,7 @@ public class GUI extends javax.swing.JFrame {
                 TagContador contador = noAtual.getInfo();
                 modelo.addRow(new Object[]{
                         contador.getTag(),
-                        Integer.valueOf(contador.getQuantidade())
+                        contador.getQuantidade()
                 });
                 noAtual = noAtual.getProximo();
             }
@@ -188,7 +188,6 @@ public class GUI extends javax.swing.JFrame {
                 printRetorno.setText("O arquivo esta bem formatado.");
             }
             textArea.setText(selectedFile.getAbsolutePath());
-           ListaEncadeada<TagContador> tags = validador.contarTags(selectedFile);
             atualizarTabelaTags(selectedFile);
 
         } catch (Exception ex) {

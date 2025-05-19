@@ -95,7 +95,7 @@ public ErroValidacao validarHTML(File htmlFile) throws IOException {
     }
     
     public ListaEncadeada<TagContador> contarTags(File htmlFile) throws IOException {
-    ListaEncadeada<TagContador> listaContagem = new ListaEncadeada<>(); // TODO: Fazer com que não precise ler o arq 2x p contar
+    ListaEncadeada<TagContador> listaContagem = new ListaEncadeada<>(); 
 
     try (BufferedReader reader = new BufferedReader(new FileReader(htmlFile))) {
         String linha;

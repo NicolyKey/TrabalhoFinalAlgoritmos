@@ -25,7 +25,7 @@ public class ListaEncadeada<T> {
     }
   
     public void inserir(T info){
-       NoLista<T> novo = new NoLista();
+       NoLista<T> novo = new NoLista<>();
        novo.setInfo(info);
        novo.setProximo(primeiro);
        this.primeiro = novo;
