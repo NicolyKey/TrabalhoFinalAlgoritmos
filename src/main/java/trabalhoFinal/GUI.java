@@ -34,23 +34,22 @@ public class GUI extends javax.swing.JFrame {
 
     private void atualizarTabelaTags(File htmlFile) {
         try {
+
             ValidadorHTML validador = new ValidadorHTML();
-            ListaEncadeada<TagContador> lista = validador.contarTags(htmlFile);
+            ErroValidacao erro = validador.validarHTML(htmlFile);
 
-            int tamanho = lista.obterComprimento();
-            TagContador[] array = new TagContador[tamanho];
+            ListaEncadeada<TagContador> lista = validador.getContadorTags();
 
-            NoLista<TagContador> atual = lista.getPrimeiro();
-            int i = 0;
+            TagContador[] arrayTags = new TagContador[lista.obterComprimento()];
+            NoLista<TagContador> noAtual = lista.getPrimeiro();
 
-            while (atual != null) {
-                array[i] = atual.getInfo();  
-                atual = atual.getProximo();
-                i++;
+            for (int i = 0; noAtual != null; i++) {
+                arrayTags[i] = noAtual.getInfo();
+                noAtual = noAtual.getProximo();
             }
 
             OrdenacaoQuickSort<TagContador> quickSort = new OrdenacaoQuickSort<>();
-            quickSort.setInfo(array);
+            quickSort.setInfo(arrayTags);
             quickSort.ordernar();
 
             DefaultTableModel modelo = (DefaultTableModel) tabelaTags.getModel();
@@ -61,7 +60,7 @@ public class GUI extends javax.swing.JFrame {
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
-                    "Erro ao contar tags: " + e.getMessage(),
+                    "Erro ao processar tags: " + e.getMessage(),
                     "Erro",
                     JOptionPane.ERROR_MESSAGE);
         }
@@ -198,7 +197,7 @@ public class GUI extends javax.swing.JFrame {
                 printRetorno.setText("O arquivo esta bem formatado.");
             }
             textArea.setText(selectedFile.getAbsolutePath());
-           ListaEncadeada<TagContador> tags = validador.contarTags(selectedFile);
+
             atualizarTabelaTags(selectedFile);
 
         } catch (Exception ex) {
