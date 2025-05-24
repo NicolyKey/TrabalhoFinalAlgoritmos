@@ -1,4 +1,4 @@
-# Validadoe dw arquivos HTML
+# Validadoe de arquivos HTML
 Trabalho final de Algoritmos e estrutura de dados
 
 ## Integrantes
